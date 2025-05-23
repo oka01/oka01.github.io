@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAY6「예뻤어」で学ぶ韓国語 - インタラクティブ学習 (ローカル実行用)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .vocab-card .back {
+            display: none;
+            transform: rotateY(180deg);
+        }
+
+        .vocab-card.flipped .front {
+            display: none;
+        }
+
+        .vocab-card.flipped .back {
+            display: block;
+            transform: rotateY(0deg);
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .quiz-options label:hover {
+            background-color: #f3f4f6;
+        }
+
+        .quiz-options input[type="radio"]:checked+label {
+            background-color: #3b82f6;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .quiz-options input[type="text"] {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+
+        .feedback {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .feedback.correct {
+            color: #16a34a;
+        }
+
+        .feedback.incorrect {
+            color: #dc2626;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .gemini-output {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            border: 1px dashed #cbd5e1;
+            border-radius: 0.375rem;
+            background-color: #f8fafc;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            /* To preserve line breaks from Gemini */
+        }
+
+        .loading-indicator {
+            font-style: italic;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-700 antialiased">
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-sky-600">DAY6「예뻤어」で学ぶ韓国語</h1>
+            <p class="text-slate-500 mt-2">インタラクティブ学習ページ (ローカル実行用)</p>
+        </header>
+
+        <nav class="mb-8">
+            <ul class="flex flex-wrap justify-center border-b border-slate-300">
+                <li class="-mb-px mr-1">
+                    <a class="tab-link bg-white inline-block py-2 px-4 text-sky-600 hover:text-sky-700 font-semibold border-l border-t border-r rounded-t"
+                        href="#" data-tab="intro">はじめに</a>
+                </li>
+                <li class="mr-1">
+                    <a class="tab-link inline-block py-2 px-4 text-slate-500 hover:text-sky-700 font-semibold" href="#"
+                        data-tab="lyrics">歌詞と訳</a>
+                </li>
+                <li class="mr-1">
+                    <a class="tab-link inline-block py-2 px-4 text-slate-500 hover:text-sky-700 font-semibold" href="#"
+                        data-tab="vocab">単語帳</a>
+                </li>
+                <li class="mr-1">
+                    <a class="tab-link inline-block py-2 px-4 text-slate-500 hover:text-sky-700 font-semibold" href="#"
+                        data-tab="grammar">文法ポイント</a>
+                </li>
+                <li>
+                    <a class="tab-link inline-block py-2 px-4 text-slate-500 hover:text-sky-700 font-semibold" href="#"
+                        data-tab="quiz">練習クイズ</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="intro" class="tab-content active bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">楽曲紹介 (곡 소개)</h2>
+                <div class="space-y-3">
+                    <p><strong>曲名 (곡명):</strong> 예뻤어 (You Were Beautiful / 綺麗だった)</p>
+                    <p><strong>アーティスト (아티스트):</strong> DAY6 (데이식스)</p>
+                    <p><strong>概要 (개요):</strong> 別れた恋人との美しかった日々を思い返し、その時の感情を歌った曲です。切ないけれど温かいメロディーと歌詞が特徴です。</p>
+                    <p class="mt-4">
+                        このページでは、DAY6の「예뻤어」を通して、韓国語の単語や文法を楽しく学んでいきます。各タブをクリックして、学習を進めてください。一部のセクションでは、✨アイコンの付いたボタンでAI(Gemini)による学習サポート機能を利用できます。
+                    </p>
+                </div>
+            </section>
+
+            <section id="lyrics" class="tab-content bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">歌詞と日本語訳 (가사 및 일본어 번역)</h2>
+                <p class="mb-4 text-sm text-slate-500">韓国語の歌詞にマウスオーバーするかクリックすると、日本語訳が表示されます（一部の環境ではクリックが必要な場合があります）。</p>
+
+                <button id="analyzeLyricsEmotionBtn"
+                    class="mb-6 bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded transition duration-150 ease-in-out">✨
+                    コーラスの感情を分析</button>
+                <div id="lyricsEmotionAnalysisLoading" class="loading-indicator hidden my-2">分析中...</div>
+                <div id="lyricsEmotionAnalysis" class="gemini-output hidden"></div>
+
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-2">Verse 1</h3>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>지금 이 순간</strong> 너와 함께라면 (チグム イ スンガン ノワ ハムッケラミョン)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                今この瞬間 君と一緒なら</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>얼마나 좋을까</strong> (オルマナ チョウルッカ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                どんなに良いだろうか</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>네 생각에</strong> 또 밤을 새워 (ニ センガゲ ト Памл Сеウォ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                君を想って また夜を明かす</p>
+                        </div>
+                    </div>
+                    <div id="chorusLyrics">
+                        <h3 class="text-xl font-semibold mb-2">Chorus</h3>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>예뻤어</strong> (イェッポッソ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                綺麗だった</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>날 바라봐 주던 그 눈빛</strong> (ナル パラ봐 チュドン ク ヌンピッ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                私を見つめてくれた その眼差し</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>날 불러주던 그 목소리</strong> (ナル プルロジュドン ク モクソリ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                私を呼んでくれた その声</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>다 다</strong> (タ タ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                全部 全部</p>
+                        </div>
+                        <div class="lyrics-line p-2 hover:bg-slate-100 rounded group" tabindex="0">
+                            <p class="korean-lyric"><strong>예뻤어</strong> (イェッポッソ)</p>
+                            <p
+                                class="japanese-translation hidden group-hover:block group-focus:block text-sm text-slate-600 mt-1">
+                                綺麗だった</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="vocab" class="tab-content bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">主要単語 (주요 단어)</h2>
+                <p class="mb-4 text-sm text-slate-500">単語カードをクリックすると意味が表示され、「✨例文を生成」ボタンでAIが例文を作成します。</p>
+                <div id="vocabList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                </div>
+            </section>
+
+            <section id="grammar" class="tab-content bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">主要文法 (주요 문법)</h2>
+                <p class="mb-4 text-sm text-slate-500">各文法ポイントの下にある「✨練習問題を作成」ボタンでAIが新しい問題を作成します。</p>
+                <div class="space-y-8">
+                    <div data-grammar-name="動詞/形容詞 + -았/었/였어 (過去形)" data-grammar-example="보다 → 봤어 / 見た">
+                        <h3 class="text-xl font-semibold mb-2">1. 動詞/形容詞 + -았/었/였어 (過去形)</h3>
+                        <p><strong>意味:</strong> 「～だった」「～した」という過去を表します。</p>
+                        <p class="mt-1"><strong>作り方:</strong></p>
+                        <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                            <li>語幹の最後の母音がㅏ, ㅗの場合: <strong>-았어</strong> (例: 보다 → 봤어 / 見た)</li>
+                            <li>語幹の最後の母音がㅏ, ㅗ以外の場合: <strong>-었어</strong> (例: 먹다 → 먹었어 / 食べた)</li>
+                            <li>하다動詞の場合: <strong>-였어</strong> (または <strong>했어</strong>) (例: 공부하다 → 공부했어 / 勉強した)</li>
+                        </ul>
+                        <button
+                            class="gemini-grammar-btn text-sm bg-teal-400 hover:bg-teal-500 text-teal-900 font-semibold py-1 px-3 rounded mt-3">✨練習問題を作成</button>
+                        <div class="gemini-grammar-loading loading-indicator hidden my-2">生成中...</div>
+                        <div class="gemini-grammar-output gemini-output hidden"></div>
+                    </div>
+                    <div data-grammar-name="名詞 + -(이)라면 (～なら)" data-grammar-example="친구 → 친구라면 / 友達なら">
+                        <h3 class="text-xl font-semibold mb-2">2. 名詞 + -(이)라면 (～なら)</h3>
+                        <p><strong>意味:</strong> 「～なら」「～であれば」という仮定を表します。</p>
+                        <p class="mt-1"><strong>作り方:</strong></p>
+                        <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                            <li>名詞が母音で終わる場合: <strong>-라면</strong> (例: 친구 → 친구라면 / 友達なら)</li>
+                            <li>名詞が子音で終わる場合: <strong>-이라면</strong> (例: 학생 → 학생이라면 / 学生なら)</li>
+                        </ul>
+                        <button
+                            class="gemini-grammar-btn text-sm bg-teal-400 hover:bg-teal-500 text-teal-900 font-semibold py-1 px-3 rounded mt-3">✨練習問題を作成</button>
+                        <div class="gemini-grammar-loading loading-indicator hidden my-2">生成中...</div>
+                        <div class="gemini-grammar-output gemini-output hidden"></div>
+                    </div>
+                    <div data-grammar-name="動詞/形容詞 + -ㄹ/을까? (～だろうか？ / ～しようか？)" data-grammar-example="가다 → 갈까? / 行こうか？">
+                        <h3 class="text-xl font-semibold mb-2">3. 動詞/形容詞 + -ㄹ/을까? (～だろうか？ / ～しようか？)</h3>
+                        <p><strong>意味:</strong> 1. 推測や疑問: 「～だろうか？」 2. 提案や意志: 「～しようか？」</p>
+                        <p class="mt-1"><strong>作り方:</strong></p>
+                        <ul class="list-disc list-inside ml-4 mt-1 space-y-1">
+                            <li>語幹が母音で終わるかㄹパッチムの場合: <strong>-ㄹ까?</strong> (例: 가다 → 갈까? / 行こうか？, 살다 → 살까? / 住もうか？)</li>
+                            <li>語幹がㄹ以外のパッチムで終わる場合: <strong>-을까?</strong> (例: 먹다 → 먹을까? / 食べようか？)</li>
+                        </ul>
+                        <button
+                            class="gemini-grammar-btn text-sm bg-teal-400 hover:bg-teal-500 text-teal-900 font-semibold py-1 px-3 rounded mt-3">✨練習問題を作成</button>
+                        <div class="gemini-grammar-loading loading-indicator hidden my-2">生成中...</div>
+                        <div class="gemini-grammar-output gemini-output hidden"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="quiz" class="tab-content bg-white p-6 rounded-lg shadow">
+                <h2 class="text-2xl font-semibold text-sky-600 mb-4">練習クイズ (연습 문제)</h2>
+                <p class="mb-6">学習した内容を元に、クイズに挑戦してみましょう！</p>
+                <div id="quizContainer"></div>
+                <button id="submitQuizBtn"
+                    class="mt-6 bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out">結果を見る</button>
+                <button id="retryQuizBtn"
+                    class="mt-6 ml-2 bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out hidden">再挑戦する</button>
+                <div id="quizResult" class="mt-8 hidden">
+                    <h3 class="text-xl font-semibold mb-2">クイズ結果</h3>
+                    <p id="scoreText" class="mb-4"></p>
+                    <div class="chart-container">
+                        <canvas id="quizScoreChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 py-4 border-t border-slate-300">
+            <p class="text-sm text-slate-500">&copy; 2024 DAY6「예뻤어」学習ページ. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab-link');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs.forEach(item => {
+                    item.classList.remove('bg-white', 'border-l', 'border-t', 'border-r', 'rounded-t', 'text-sky-600');
+                    item.classList.add('text-slate-500');
+                });
+                tab.classList.add('bg-white', 'border-l', 'border-t', 'border-r', 'rounded-t', 'text-sky-600');
+                tab.classList.remove('text-slate-500');
+                const targetTab = e.target.getAttribute('data-tab');
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === targetTab) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+        document.querySelector('.tab-link[data-tab="intro"]').click();
+
+        const lyricsLines = document.querySelectorAll('.lyrics-line');
+        lyricsLines.forEach(line => {
+            line.addEventListener('click', () => {
+                const translation = line.querySelector('.japanese-translation');
+                if (translation) translation.classList.toggle('hidden');
+            });
+            line.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const translation = line.querySelector('.japanese-translation');
+                    if (translation) translation.classList.toggle('hidden');
+                }
+            });
+        });
+
+        const vocabularyData = [
+            { kor: "지금 (지금)", pron: "チグム", jpn: "今 (いま)" }, { kor: "이 순간 (이 순간)", pron: "イ スンガン", jpn: "この瞬間 (このしゅんかん)" },
+            { kor: "너 (너)", pron: "ノ", jpn: "君、あなた" }, { kor: "함께라면 (함께라면)", pron: "ハムッケラミョン", jpn: "一緒なら" },
+            { kor: "얼마나 (얼마나)", pron: "オルマナ", jpn: "どれほど、どんなに" }, { kor: "좋을까 (좋을까)", pron: "チョウルッカ", jpn: "良いだろうか" },
+            { kor: "네 생각 (네 생각)", pron: "ニ センガク", jpn: "君を想うこと" }, { kor: "또 (또)", pron: "ト", jpn: "また" },
+            { kor: "밤을 새우다 (밤을 새우다)", pron: "パムル セウダ", jpn: "夜を明かす" }, { kor: "예뻤어 (예뻤어)", pron: "イェッポッソ", jpn: "綺麗だった" },
+            { kor: "날 (날)", pron: "ナル", jpn: "私を" }, { kor: "바라보다 (바라보다)", pron: "パラボダ", jpn: "見つめる" },
+            { kor: "주던 (주던)", pron: "チュドン", jpn: "～してくれた" }, { kor: "그 (그)", pron: "ク", jpn: "その" },
+            { kor: "눈빛 (눈빛)", pron: "ヌンピッ", jpn: "眼差し" }, { kor: "부르다 (부르다)", pron: "プルダ", jpn: "呼ぶ" },
+            { kor: "목소리 (목소리)", pron: "モクソリ", jpn: "声" }, { kor: "다 (다)", pron: "タ", jpn: "全部" }
+        ];
+
+        const vocabListContainer = document.getElementById('vocabList');
+        vocabularyData.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'vocab-card border border-slate-300 rounded-lg p-4 bg-white flex flex-col justify-between';
+            card.setAttribute('tabindex', '0');
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'flex-grow cursor-pointer';
+            contentDiv.innerHTML = `
+                <div class="front text-center">
+                    <p class="text-lg font-semibold">${item.kor}</p>
+                    <p class="text-sm text-slate-500">${item.pron}</p>
+                </div>
+                <div class="back text-center">
+                    <p class="text-lg">${item.jpn}</p>
+                </div>`;
+            contentDiv.addEventListener('click', () => card.classList.toggle('flipped'));
+
+            card.appendChild(contentDiv);
+
+            const geminiButton = document.createElement('button');
+            geminiButton.className = 'gemini-vocab-btn text-xs bg-amber-400 hover:bg-amber-500 text-amber-900 font-semibold py-1 px-2 rounded mt-3 w-full';
+            geminiButton.innerHTML = '✨例文を生成';
+            geminiButton.dataset.korean = item.kor.split(' ')[0];
+            geminiButton.dataset.japanese = item.jpn.split(' ')[0];
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = `vocab_loading_${index}`;
+            loadingDiv.className = 'loading-indicator hidden my-1 text-xs';
+            loadingDiv.textContent = '生成中...';
+
+            const exampleDiv = document.createElement('div');
+            exampleDiv.id = `vocab_example_${index}`;
+            exampleDiv.className = 'gemini-output hidden';
+
+            card.appendChild(geminiButton);
+            card.appendChild(loadingDiv);
+            card.appendChild(exampleDiv);
+
+            vocabListContainer.appendChild(card);
+        });
+
+        // Add keypress event listeners to vocab cards for accessibility
+        document.querySelectorAll('.vocab-card').forEach(card => {
+            card.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    // Check if the event target is the button itself
+                    if (!e.target.classList.contains('gemini-vocab-btn')) {
+                        card.classList.toggle('flipped');
+                        e.preventDefault(); // Prevent button click if flipping card
+                    }
+                }
+            });
+        });
+
+
+        const quizData = [
+            { type: "mcq", question: "1. 「지금」の正しい意味は？", options: ["声", "今", "全部", "眼差し"], answer: "今", id: "q1_1" },
+            { type: "mcq", question: "2. 「목소리」の正しい意味は？", options: ["声", "今", "全部", "眼差し"], answer: "声", id: "q1_2" },
+            { type: "mcq", question: "3. 「눈빛」の正しい意味は？", options: ["声", "今", "全部", "眼差し"], answer: "眼差し", id: "q1_3" },
+            { type: "mcq", question: "4. 「다」の正しい意味は？", options: ["声", "今", "全部", "眼差し"], answer: "全部", id: "q1_4" },
+            { type: "mcq", question: "5. 어제 영화를 (보다) → 어제 영화를 ( ).", options: ["봤어", "보았어", "볼거야", "보고있어"], answer: "봤어", id: "q2_1" },
+            { type: "mcq", question: "6. 노래가 정말 (좋다) → 노래가 정말 ( ).", options: ["좋았어", "좋을까", "좋으니까", "좋더라"], answer: "좋았어", id: "q2_2" },
+            { type: "mcq", question: "7. 내일 뭐 (하다)? → 내일 뭐 ( ).", options: ["할까?", "했어?", "하자.", "하니?"], answer: "할까?", id: "q3_1" }
+        ];
+
+        const quizContainer = document.getElementById('quizContainer');
+        const submitQuizBtn = document.getElementById('submitQuizBtn');
+        const retryQuizBtn = document.getElementById('retryQuizBtn');
+        const quizResultDiv = document.getElementById('quizResult');
+        const scoreText = document.getElementById('scoreText');
+        let quizScoreChart = null;
+
+        function buildQuiz() {
+            quizContainer.innerHTML = '';
+            quizResultDiv.classList.add('hidden');
+            submitQuizBtn.classList.remove('hidden');
+            retryQuizBtn.classList.add('hidden');
+            if (quizScoreChart) quizScoreChart.destroy();
+
+            quizData.forEach((q) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'quiz-question';
+                questionDiv.innerHTML = `<p class="font-semibold mb-3">${q.question}</p>`;
+                const optionsDiv = document.createElement('div');
+                optionsDiv.className = 'quiz-options space-y-2';
+                q.options.forEach(option => {
+                    const optionId = `${q.id}_${option.replace(/\s+/g, '_').replace(/[?().]/g, '')}`;
+                    const wrapper = document.createElement('div');
+                    const input = document.createElement('input');
+                    input.type = 'radio'; input.name = q.id; input.value = option; input.id = optionId; input.className = "sr-only";
+                    const label = document.createElement('label');
+                    label.htmlFor = optionId; label.textContent = option;
+                    wrapper.appendChild(input); wrapper.appendChild(label);
+                    optionsDiv.appendChild(wrapper);
+                });
+                questionDiv.appendChild(optionsDiv);
+                quizContainer.appendChild(questionDiv);
+            });
+        }
+
+        submitQuizBtn.addEventListener('click', () => {
+            let score = 0; let answeredQuestions = 0;
+            const questions = quizContainer.querySelectorAll('.quiz-question');
+            questions.forEach((questionEl, index) => {
+                const qData = quizData[index];
+                const selectedOption = questionEl.querySelector(`input[name="${qData.id}"]:checked`);
+                let feedbackEl = questionEl.querySelector('.feedback');
+                if (feedbackEl) feedbackEl.remove();
+                feedbackEl = document.createElement('div');
+                feedbackEl.className = 'feedback';
+
+                if (selectedOption) {
+                    answeredQuestions++;
+                    if (selectedOption.value === qData.answer) {
+                        score++; feedbackEl.textContent = '正解！'; feedbackEl.classList.add('correct');
+                    } else {
+                        feedbackEl.textContent = `不正解。正解は「${qData.answer}」です。`; feedbackEl.classList.add('incorrect');
+                    }
+                } else {
+                    feedbackEl.textContent = 'この問題は未解答です。'; feedbackEl.classList.add('incorrect');
+                }
+                questionEl.appendChild(feedbackEl);
+            });
+
+            if (answeredQuestions < quizData.length && quizData.length > 0) {
+                alert('すべての問題に解答してください。'); return;
+            }
+            if (quizData.length === 0) {
+                scoreText.textContent = "表示するクイズがありません。";
+            } else {
+                scoreText.textContent = `あなたのスコア: ${score} / ${quizData.length}`;
+            }
+
+            quizResultDiv.classList.remove('hidden');
+            submitQuizBtn.classList.add('hidden');
+            retryQuizBtn.classList.remove('hidden');
+
+            if (quizScoreChart) quizScoreChart.destroy();
+            if (quizData.length > 0) {
+                const ctx = document.getElementById('quizScoreChart').getContext('2d');
+                quizScoreChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['正解', '不正解'],
+                        datasets: [{
+                            label: '解答数', data: [score, quizData.length - score],
+                            backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
+                            borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } }
+                });
+            }
+        });
+        retryQuizBtn.addEventListener('click', buildQuiz);
+        buildQuiz();
+
+        async function callGeminiAPI(prompt) {
+            // !!!!!!!!!! 重要 !!!!!!!!!!
+            // ここにあなたのGemini APIキーを入力してください。
+            // このキーは絶対に公開しないでください。ローカルテスト専用 です。
+            const apiKey = "AIzaSyApg0wTNtrslwczZLQAjIG9FpufTpQgeho";
+            // !!!!!!!!!! 重要 !!!!!!!!!!
+
+            if (apiKey === "AIzaSyApg0wTNtrslwczZLQAjIG9FpufTpQgeho" || apiKey === "") {
+                return "エラー: Gemini APIキーが設定されていません。JavaScriptコード内の 'apiKey' 変数を設定してください。";
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                // 必要に応じてセーフティ設定を追加
+                // safetySettings: [ ... ], 
+                // generationConfig: { ... }
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    const errorBody = await response.json();
+                    console.error("API Error Response:", errorBody);
+                    let errorMessage = `APIリクエスト失敗: ${response.status}`;
+                    if (errorBody.error && errorBody.error.message) {
+                        errorMessage += ` - ${errorBody.error.message}`;
+                    }
+                    if (response.status === 403) {
+                        errorMessage += "\n考えられる原因: APIキーが無効、またはAPIが有効になっていない、課金設定に問題がある、などの可能性があります。"
+                    } else if (response.status === 400) {
+                        errorMessage += "\n考えられる原因: リクエスト内容（プロンプトなど）に問題がある可能性があります。"
+                    } else if (response.status === 429) {
+                        errorMessage += "\n考えられる原因: APIのリクエスト制限を超過しました。しばらく待ってから再試行してください。"
+                    }
+                    throw new Error(errorMessage);
+                }
+                const result = await response.json();
+                if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                    return result.candidates[0].content.parts[0].text;
+                } else if (result.candidates && result.candidates[0]?.finishReason) {
+                    return `AIからの応答がありませんでした。理由: ${result.candidates[0].finishReason}`;
+                } else {
+                    console.error("Unexpected API response structure:", result);
+                    return "期待される形式でAIからの応答がありませんでした。";
+                }
+            } catch (error) {
+                console.error("Gemini API呼び出しエラー:", error);
+                return `エラーが発生しました: ${error.message}`;
+            }
+        }
+
+        document.querySelectorAll('.gemini-vocab-btn').forEach((button) => {
+            button.addEventListener('click', async (e) => {
+                const card = e.target.closest('.vocab-card');
+                const exampleDiv = card.querySelector('.gemini-output');
+                const loadingDiv = card.querySelector('.loading-indicator');
+
+                const koreanWord = button.dataset.korean;
+                const japaneseMeaning = button.dataset.japanese;
+
+                exampleDiv.classList.add('hidden');
+                loadingDiv.classList.remove('hidden');
+                exampleDiv.textContent = '';
+
+                const prompt = `以下の韓国語の単語とその日本語訳を使って、簡単な韓国語の例文を1つと、その日本語訳を生成してください。\n\n単語: ${koreanWord}\n意味: ${japaneseMeaning}\n\n形式は以下のようにしてください:\n韓国語例文: (ここに韓国語の例文)\n日本語訳: (ここに日本語訳)`;
+
+                const generatedText = await callGeminiAPI(prompt);
+                exampleDiv.textContent = generatedText;
+                loadingDiv.classList.add('hidden');
+                exampleDiv.classList.remove('hidden');
+            });
+        });
+
+        document.querySelectorAll('.gemini-grammar-btn').forEach(button => {
+            button.addEventListener('click', async (e) => {
+                const parentDiv = e.target.closest('div[data-grammar-name]');
+                const grammarName = parentDiv.dataset.grammarName;
+                const grammarExample = parentDiv.dataset.grammarExample;
+                const outputDiv = parentDiv.querySelector('.gemini-grammar-output');
+                const loadingDiv = parentDiv.querySelector('.gemini-grammar-loading');
+
+                outputDiv.classList.add('hidden');
+                loadingDiv.classList.remove('hidden');
+                outputDiv.textContent = '';
+
+                const prompt = `以下の韓国語の文法ルールと例文を参考に、新しい簡単な練習問題（主に選択式か短文穴埋め）を1つ作成してください。問題、選択肢（必要な場合）、そして正解と非常に短い日本語の解説を含めてください。\n\n文法ルール: ${grammarName}\n例文: ${grammarExample}\n\n生成する問題の形式例:\n問題: [ここに生成された問題文]\n選択肢: (A) [選択肢1] (B) [選択肢2] (C) [選択肢3] (必要な場合のみ)\n正解: [正解の選択肢または単語]\n解説: [ごく短い日本語の解説]`;
+
+                const generatedText = await callGeminiAPI(prompt);
+                outputDiv.textContent = generatedText;
+                loadingDiv.classList.add('hidden');
+                outputDiv.classList.remove('hidden');
+            });
+        });
+
+        document.getElementById('analyzeLyricsEmotionBtn').addEventListener('click', async () => {
+            const chorusLyricsDiv = document.getElementById('chorusLyrics');
+            const koreanLyricsElements = chorusLyricsDiv.querySelectorAll('.korean-lyric');
+            let chorusText = "";
+            koreanLyricsElements.forEach(el => {
+                chorusText += el.textContent.replace(/\(.+?\)/g, '').trim() + "\n"; // 発音ガイドを除去
+            });
+
+            const outputDiv = document.getElementById('lyricsEmotionAnalysis');
+            const loadingDiv = document.getElementById('lyricsEmotionAnalysisLoading');
+
+            outputDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            outputDiv.textContent = '';
+
+            const prompt = `以下のDAY6「예뻤어」のコーラス部分の韓国語の歌詞が表現している主な感情や雰囲気を分析し、日本語で簡潔に説明してください。\n\n歌詞:\n${chorusText.trim()}`;
+
+            const generatedText = await callGeminiAPI(prompt);
+            outputDiv.textContent = generatedText;
+            loadingDiv.classList.add('hidden');
+            outputDiv.classList.remove('hidden');
+        });
+
+    </script>
+</body>
+
+</html>
